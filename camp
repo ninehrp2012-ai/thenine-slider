@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>희망 지원 캠페인 사연 소개</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      margin:0;
+      background:#000;
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:#eee;
+      font-size:14px;
+    }
+
+    .hope-wrap{
+      width:95%;
+      max-width:900px;
+      margin:10px auto 0;
+    }
+
+    /* 전체 리스트 */
+    .case-list{
+      border:1px solid #555;
+      border-radius:4px;
+      overflow:hidden;
+    }
+
+    /* 각 사연 한 묶음 */
+    .case-item + .case-item{
+      border-top:1px solid #444;
+    }
+
+    /* 상단 한 줄 (닉네임/요약/금액/+열기/닫기) */
+    .case-head{
+      width:100%;
+      background:#000;
+      color:#eee;
+      padding:10px 12px;
+      border:0;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .case-head:hover{
+      background:#111;
+    }
+    .case-head .nick{
+      color:#ffcc33;
+      font-weight:bold;
+      white-space:nowrap;
+    }
+    .case-head .summary{
+      flex:1 1 auto;
+      min-width:0;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .case-head .amount{
+      white-space:nowrap;
+      font-weight:500;
+      margin-left:6px;
+    }
+    .case-head .toggle{
+      margin-left:10px;
+      white-space:nowrap;
+      color:#ffcc33;
+      font-size:13px;
+    }
+
+    /* 열렸을 때 */
+    .case-item.open .case-head{
+      background:#111;
+    }
+    .case-item.open .toggle::before{
+      content:"- ";
+    }
+    .case-item:not(.open) .toggle::before{
+      content:"+ ";
+    }
+
+    /* 안쪽 내용 박스 */
+    .case-body{
+      display:none;
+      background:#050505;
+      border-top:1px solid #333;
+      padding:10px 12px 12px;
+    }
+    .case-item.open .case-body{
+      display:block;
+    }
+
+    /* 내부 표 느낌 레이아웃 */
+    .case-row{
+      display:flex;
+      gap:10px;
+      padding:6px 0;
+    }
+    .case-row + .case-row{
+      border-top:1px dashed #333;
+    }
+    .case-row-title{
+      flex:0 0 80px;
+      color:#ffcc33;
+      font-weight:600;
+      white-space:nowrap;
+    }
+    .case-row-content{
+      flex:1 1 auto;
+      line-height:1.5;
+      word-break:keep-all;
+    }
+
+    /* 모바일에서 상단 줄 줄바꿈 */
+    @media (max-width:600px){
+      .case-head{
+        flex-wrap:wrap;
+      }
+      .case-head .summary{
+        flex-basis:100%;
+        margin-top:3px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="hope-wrap">
+  <div class="case-list">
+
+    <!-- 비엔비엔 -->
+    <div class="case-item open">
+      <button type="button" class="case-head">
+        <span class="nick">• 비엔비엔</span>
+        <span class="summary">질병으로 인한 의료비 지원</span>
+        <span class="amount">500만원</span>
+        <span class="toggle">열기/닫기</span>
+      </button>
+      <div class="case-body">
+        <div class="case-row">
+          <div class="case-row-title">사연 요약</div>
+          <div class="case-row-content">
+            여기 비엔비엔님의 사연 요약이 들어갑니다. (예: 장기간 치료로 인해
+            경제적 부담이 커져 의료비 지원이 절실한 상황 등)
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-row-title">지원 금액</div>
+          <div class="case-row-content">
+            총 500만원 의료비 지원
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-row-title">운영진 코멘트</div>
+          <div class="case-row-content">
+            작은 도움이지만 치료와 회복에 보탬이 되기를 진심으로 바라며,
+            빠른 쾌유를 응원합니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 예시 2 -->
+    <div class="case-item">
+      <button type="button" class="case-head">
+        <span class="nick">• 닉네임A</span>
+        <span class="summary">채무 상환 및 생계비 지원</span>
+        <span class="amount">300만원</span>
+        <span class="toggle">열기/닫기</span>
+      </button>
+      <div class="case-body">
+        <div class="case-row">
+          <div class="case-row-title">사연 요약</div>
+          <div class="case-row-content">
+            예시 사연 요약입니다. 실제 게시 시 회원님의 사연으로 교체해주세요.
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-row-title">지원 금액</div>
+          <div class="case-row-content">
+            총 300만원 채무·생활비 지원
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-row-title">운영진 코멘트</div>
+          <div class="case-row-content">
+            다시 일어설 수 있는 시간을 함께 만들고자 이번 지원을 진행했습니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 예시 3 -->
+    <div class="case-item">
+      <button type="button" class="case-head">
+        <span class="nick">• 닉네임B</span>
+        <span class="summary">생계 및 긴급 생활비 지원</span>
+        <span class="amount">200만원</span>
+        <span class="toggle">열기/닫기</span>
+      </button>
+      <div class="case-body">
+        <div class="case-row">
+          <div class="case-row-title">사연 요약</div>
+          <div class="case-row-content">
+            예시 사연 요약입니다. 실제 사연에 맞게 수정해 주세요.
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-row-title">지원 금액</div>
+          <div class="case-row-content">
+            총 200만원 생계 지원
+          </div>
+        </div>
+        <div class="case-row">
+          <div class="case-row-title">운영진 코멘트</div>
+          <div class="case-row-content">
+            일상으로의 회복을 함께 응원하며 작은 힘을 보탭니다.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // 열기/닫기 토글
+  document.addEventListener('click', function(e){
+    const head = e.target.closest('.case-head');
+    if(!head) return;
+
+    const item = head.parentElement;
+    const isOpen = item.classList.contains('open');
+
+    // 하나만 열리게 하려면 아래 주석 해제
+    // document.querySelectorAll('.case-item.open')
+    //   .forEach(el => el.classList.remove('open'));
+
+    if(isOpen){
+      item.classList.remove('open');
+    }else{
+      item.classList.add('open');
+    }
+  });
+</script>
+
+</body>
+</html>
