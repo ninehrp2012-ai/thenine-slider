@@ -1,65 +1,163 @@
 <!DOCTYPE html>
 <html lang="ko">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+  <meta charset="UTF-8">
+  <title>THE NINE Slider</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<style>
-  body{
-    margin:0;
-    background:#000;
-    display:flex;
-    justify-content:center;
-    padding-top:20px;
-  }
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      margin:0;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
 
-  .slider-wrap{
-    width:95vw;
-    max-width:900px;
-    overflow-x:auto;
-    scroll-snap-type:x mandatory;
-    display:flex;
-    gap:10px;
-    padding-bottom:10px;
-  }
+    .slider{
+      position:relative;
+      width:95vw;          /* 가로 95% */
+      max-width:900px;
+      height:200px;        /* 이미지 높이 */
+      overflow:hidden;
+      border-radius:8px;
+      background:#000;
+    }
 
-  .slide{
-    flex:0 0 auto;
-    width:90%;
-    max-width:850px;
-    height:200px;
-    scroll-snap-align:start;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#111;
-    border-radius:10px;
-    overflow:hidden;
-  }
+    .slides{
+      display:flex;
+      width:300%;          /* 슬라이드 3장 */
+      height:100%;
+      transition:transform .4s ease;
+    }
 
-  .slide img{
-    height:100%;
-    width:auto;
-    object-fit:contain;
-    display:block;
-  }
+    .slide{
+      flex:0 0 100%;       /* 한 번에 한 장 */
+      height:100%;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      background:#000;
+    }
 
-  /* 스크롤바 숨기기 */
-  .slider-wrap::-webkit-scrollbar { display:none; }
-</style>
+    .slide img{
+      height:100%;
+      width:auto;
+      object-fit:contain;  /* 전체가 보이게 */
+      display:block;
+    }
 
+    /* 좌우 화살표 버튼 */
+    .nav{
+      position:absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:28px;
+      height:28px;
+      border-radius:14px;
+      background:rgba(0,0,0,.6);
+      color:#fff;
+      border:none;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      z-index:10;
+    }
+    .nav.prev{left:8px;}
+    .nav.next{right:8px;}
+    .nav:hover{background:rgba(0,0,0,.85);}
+
+    /* 아래 점 네비 */
+    .dots{
+      position:absolute;
+      bottom:8px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:6px;
+      z-index:11;
+    }
+    .dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:rgba(255,255,255,.3);
+      cursor:pointer;
+    }
+    .dot.active{
+      background:#ffcc33;
+    }
+  </style>
+</head>
 <body>
 
-<div class="slider-wrap">
-  <div class="slide">
-    <img src="https://imgur.com/B0qJD4s.jpg">
+  <div class="slider" id="slider">
+    <div class="slides" id="slides">
+      <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg" alt="img1"></div>
+      <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg" alt="img2"></div>
+      <div class="slide"><img src="https://imgur.com/27x6go7.jpg" alt="img3"></div>
+    </div>
+
+    <!-- 좌우 화살표 -->
+    <button class="nav prev" id="prev">&#10094;</button>
+    <button class="nav next" id="next">&#10095;</button>
+
+    <!-- 점 네비 -->
+    <div class="dots" id="dots">
+      <div class="dot active" data-index="0"></div>
+      <div class="dot" data-index="1"></div>
+      <div class="dot" data-index="2"></div>
+    </div>
   </div>
-  <div class="slide">
-    <img src="https://imgur.com/GO4vbwR.jpg">
-  </div>
-  <div class="slide">
-    <img src="https://imgur.com/27x6go7.jpg">
-  </div>
-</div>
+
+  <script>
+    (function(){
+      const slides = document.getElementById('slides');
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      const dots = Array.from(document.querySelectorAll('#dots .dot'));
+      const total = dots.length;
+      let current = 0;
+      let timer = null;
+      const INTERVAL = 5000; // 5초
+
+      function goTo(index){
+        current = (index + total) % total; // 양쪽 무한 루프
+        slides.style.transform = 'translateX(' + (-100 * current) + '%)';
+        dots.forEach((d,i)=>d.classList.toggle('active', i===current));
+      }
+
+      function resetTimer(){
+        if(timer) clearInterval(timer);
+        timer = setInterval(()=>goTo(current+1), INTERVAL);
+      }
+
+      prevBtn.addEventListener('click', ()=>{
+        goTo(current - 1);
+        resetTimer();
+      });
+
+      nextBtn.addEventListener('click', ()=>{
+        goTo(current + 1);
+        resetTimer();
+      });
+
+      dots.forEach((dot,i)=>{
+        dot.addEventListener('click', ()=>{
+          goTo(i);
+          resetTimer();
+        });
+      });
+
+      // 처음 자동 슬라이드 시작
+      goTo(0);
+      resetTimer();
+    })();
+  </script>
 
 </body>
 </html>
