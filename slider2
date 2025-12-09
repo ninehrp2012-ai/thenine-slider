@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>THE NINE Slider</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      margin:0;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
+
+    .slider-wrap{
+      width:95vw;          /* 화면 가로 95% */
+      max-width:900px;
+      padding:8px 0 18px;
+      position:relative;
+    }
+
+    .slider-track{
+      display:flex;
+      gap:10px;            /* 이미지 사이 여백 */
+      overflow-x:auto;
+      scroll-behavior:smooth;
+      scrollbar-width:none;       /* 파폭 */
+    }
+    .slider-track::-webkit-scrollbar{display:none;} /* 크롬 등 */
+
+    .slide{
+      flex:0 0 auto;
+      height:200px;        /* 기본 높이 (필요하면 조정) */
+      width:auto;
+      border-radius:8px;
+      display:block;
+      object-fit:cover;    /* 이미지 비율 유지하면서 적당히 채우기 */
+      background:#000;
+    }
+
+    .dots{
+      margin-top:8px;
+      text-align:center;
+    }
+    .dot{
+      display:inline-block;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:rgba(255,255,255,.3);
+      margin:0 4px;
+      cursor:pointer;
+    }
+    .dot.active{
+      background:#ffcc33;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider-wrap">
+    <div class="slider-track" id="track">
+      <!-- 여기 이미지 5장 주소만 바꿔서 쓰면 됨 -->
+      <img class="slide" src="https://imgur.com/HOzRARN.jpg" alt="img1">
+      <img class="slide" src="https://imgur.com/d13mia8.jpg" alt="img2">
+      <img class="slide" src="https://imgur.com/e1zo0W2.jpg" alt="img3">
+      <img class="slide" src="https://imgur.com/HOzRARN.jpg" alt="img4">
+      <img class="slide" src="https://imgur.com/d13mia8.jpg" alt="img5">
+      <!-- ↑↑ 원하는 이미지 5장으로 교체하면 됨 -->
+    </div>
+
+    <div class="dots" id="dots">
+      <span class="dot active" data-index="0"></span>
+      <span class="dot" data-index="1"></span>
+      <span class="dot" data-index="2"></span>
+      <span class="dot" data-index="3"></span>
+      <span class="dot" data-index="4"></span>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const track = document.getElementById('track');
+      const imgs  = Array.from(track.querySelectorAll('.slide'));
+      const dots  = Array.from(document.querySelectorAll('#dots .dot'));
+
+      function scrollToImage(index){
+        const img = imgs[index];
+        if(!img) return;
+        const trackRect = track.getBoundingClientRect();
+        const imgRect   = img.getBoundingClientRect();
+        const current   = track.scrollLeft;
+        const target = current + (imgRect.left - trackRect.left) -
+                       (trackRect.width - imgRect.width)/2;
+        track.scrollTo({left:target, behavior:'smooth'});
+      }
+
+      function setActiveDot(index){
+        dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+      }
+
+      dots.forEach((dot,i)=>{
+        dot.addEventListener('click',()=>{
+          scrollToImage(i);
+          setActiveDot(i);
+        });
+      });
+
+      // 스크롤에 따라 현재 이미지에 가장 가까운 dot 활성화
+      let ticking = false;
+      track.addEventListener('scroll',()=>{
+        if(ticking) return;
+        ticking = true;
+        requestAnimationFrame(()=>{
+          const center = track.scrollLeft + track.clientWidth/2;
+          let closest = 0;
+          let minDiff = Infinity;
+          imgs.forEach((img,i)=>{
+            const mid = img.offsetLeft + img.offsetWidth/2;
+            const diff = Math.abs(center - mid);
+            if(diff < minDiff){
+              minDiff = diff;
+              closest = i;
+            }
+          });
+          setActiveDot(closest);
+          ticking = false;
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
