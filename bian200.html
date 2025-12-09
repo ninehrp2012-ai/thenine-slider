@@ -22,30 +22,27 @@
     /* 가로로 이어지는 트랙 */
     .slider-track{
       display:flex;
-      gap:10px;            /* 이미지 사이 여백 */
+      gap:10px;                 /* 이미지 사이 여백 */
       overflow-x:auto;
       scroll-behavior:smooth;
-      scrollbar-width:none;          /* 파폭 */
+      scrollbar-width:none;     /* 파폭 */
     }
     .slider-track::-webkit-scrollbar{display:none;}  /* 크롬 등 */
 
-    /* 각 슬라이드 – 폭을 80%로 줘서 다음 이미지가 살짝 보이게 */
+    /* 각 슬라이드: 이미지 크기만큼만 차지 */
     .slide{
-      flex:0 0 80%;        /* 한 슬라이드가 전체의 80% 정도 차지 */
-      height:200px;        /* 이미지 높이 */
-      border-radius:10px;
-      background:#000;
-      overflow:hidden;
+      flex:0 0 auto;           /* 폭을 고정 비율(80%)이 아닌, 내용 크기만큼 */
       display:flex;
-      justify-content:center;
       align-items:center;
+      justify-content:center;
     }
 
     .slide img{
-      height:100%;
-      width:auto;          /* 비율 유지 */
-      object-fit:cover;  /* 잘리지 않고 전체 보이게 */
+      height:200px;            /* 이미지 높이 200px */
+      width:auto;              /* 비율 유지 */
+      object-fit:contain;      /* 잘리지 않게 */
       display:block;
+      border-radius:10px;
     }
 
     /* 아래 점 네비 */
@@ -86,22 +83,22 @@
 
   <script>
     (function(){
-      const track = document.getElementById('track');
+      const track  = document.getElementById('track');
       const slides = Array.from(track.querySelectorAll('.slide'));
       const dots   = Array.from(document.querySelectorAll('#dots .dot'));
 
       function scrollToSlide(index){
         const slide = slides[index];
         if(!slide) return;
-        // 해당 슬라이드의 왼쪽 위치로 스크롤
         const left = slide.offsetLeft;
-        track.scrollTo({left, behavior:'smooth'});
+        track.scrollTo({ left, behavior:'smooth' });
       }
 
       function setActiveDot(index){
         dots.forEach((d,i)=>d.classList.toggle('active', i===index));
       }
 
+      // 점 클릭으로만 이동 (자동 슬라이드 없음)
       dots.forEach((dot, i)=>{
         dot.addEventListener('click', ()=>{
           scrollToSlide(i);
@@ -109,7 +106,7 @@
         });
       });
 
-      // 스크롤 움직일 때 현재 중앙에 가장 가까운 슬라이드 기준으로 점 업데이트
+      // 손으로 스크롤할 때도 활성 점 변경
       let ticking = false;
       track.addEventListener('scroll', ()=>{
         if(ticking) return;
