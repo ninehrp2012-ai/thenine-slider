@@ -9,49 +9,61 @@
     *{box-sizing:border-box;margin:0;padding:0}
     body{
       margin:0;
-      background:#000;          /* flex, 100vh 제거 */
-    }
-
-    .slider-wrap{
-      width:95vw;
-      max-width:900px;
-      padding:8px 0 20px;
-      position:relative;
-      margin:0 auto;            /* 가운데 정렬 */
-    }
-
-    .slider-track{
+      background:#000; /* 필요하면 다른 색으로 변경 */
       display:flex;
-      gap:10px;
-      overflow-x:auto;
-      scroll-behavior:smooth;
-      scrollbar-width:none;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
     }
-    .slider-track::-webkit-scrollbar{display:none;}
+
+    /* 슬라이더 전체 박스 */
+    .slider{
+      position:relative;
+      width:95vw;          /* 화면 가로 95% */
+      max-width:900px;     /* 너무 넓어지는 것 방지용 */
+      height:200px;        /* 요청한 높이 */
+      overflow:hidden;
+      border-radius:6px;
+    }
+
+    .slides{
+      display:flex;
+      width:500%;          /* 5장 = 100% x 5 */
+      height:100%;
+      transition:transform .4s ease;
+    }
 
     .slide{
-      flex:0 0 auto;
-      height:200px;
-      width:auto;
-      border-radius:10px;
-      display:block;
-      object-fit:cover;         /* 필요하면 contain 으로 변경 가능 */
-      background:#000;
+      flex:0 0 100%;       /* 한 번에 한 장씩 보이도록 */
+      height:100%;
     }
 
-    .dots{
-      margin-top:10px;
-      text-align:center;
+    .slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
     }
+
+    /* 아래 점 네비게이션 */
+    .dots{
+      position:absolute;
+      bottom:8px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:8px;
+      z-index:10;
+    }
+
     .dot{
-      display:inline-block;
       width:10px;
       height:10px;
       border-radius:50%;
-      background:rgba(255,255,255,.3);
-      margin:0 4px;
+      background:rgba(255,255,255,.35);
       cursor:pointer;
     }
+
     .dot.active{
       background:#ffcc33;
     }
@@ -59,68 +71,49 @@
 </head>
 <body>
 
-  <div class="slider-wrap">
-    <div class="slider-track" id="track">
-      <img class="slide" src="https://imgur.com/B0qJD4s.jpg" alt="img1">
-      <img class="slide" src="https://imgur.com/GO4vbwR.jpg" alt="img2">
-      <img class="slide" src="https://imgur.com/27x6go7.jpg" alt="img3">
+  <div class="slider" id="slider">
+    <div class="slides" id="slides">
+      <!-- ↓↓↓ 여기 5개 이미지 주소만 바꿔서 쓰면 됨 ↓↓↓ -->
+      <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg" alt="slide1"></div>
+      <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg" alt="slide2"></div>
+      <div class="slide"><img src="https://imgur.com/27x6go7.jpg" alt="slide3"></div>
     </div>
 
     <div class="dots" id="dots">
-      <span class="dot active" data-index="0"></span>
-      <span class="dot" data-index="1"></span>
-      <span class="dot" data-index="2"></span>
+      <div class="dot active" data-index="0"></div>
+      <div class="dot" data-index="1"></div>
+      <div class="dot" data-index="2"></div>
+      <div class="dot" data-index="3"></div>
+      <div class="dot" data-index="4"></div>
     </div>
   </div>
 
   <script>
     (function(){
-      const track = document.getElementById('track');
-      const imgs  = Array.from(track.querySelectorAll('.slide'));
-      const dots  = Array.from(document.querySelectorAll('#dots .dot'));
+      const slides = document.getElementById('slides');
+      const dots   = document.querySelectorAll('#dots .dot');
+      let current = 0;
+      const total = dots.length;
 
-      function scrollToImage(index){
-        const img = imgs[index];
-        if(!img) return;
-        const trackRect = track.getBoundingClientRect();
-        const imgRect   = img.getBoundingClientRect();
-        const current   = track.scrollLeft;
-        const target = current + (imgRect.left - trackRect.left)
-                     - (trackRect.width - imgRect.width)/2;
-        track.scrollTo({left:target, behavior:'smooth'});
-      }
-
-      function setActiveDot(index){
+      function goTo(index){
+        current = index;
+        slides.style.transform = 'translateX(' + (-100 * index) + '%)';
         dots.forEach((d,i)=>d.classList.toggle('active', i===index));
       }
 
-      dots.forEach((dot,i)=>{
-        dot.addEventListener('click',()=>{
-          scrollToImage(i);
-          setActiveDot(i);
+      dots.forEach(dot=>{
+        dot.addEventListener('click', function(){
+          const i = Number(this.getAttribute('data-index'));
+          goTo(i);
         });
       });
 
-      let ticking = false;
-      track.addEventListener('scroll',()=>{
-        if(ticking) return;
-        ticking = true;
-        requestAnimationFrame(()=>{
-          const center = track.scrollLeft + track.clientWidth/2;
-          let closest = 0;
-          let minDiff = Infinity;
-          imgs.forEach((img,i)=>{
-            const mid = img.offsetLeft + img.offsetWidth/2;
-            const diff = Math.abs(center - mid);
-            if(diff < minDiff){
-              minDiff = diff;
-              closest = i;
-            }
-          });
-          setActiveDot(closest);
-          ticking = false;
-        });
-      });
+      // 필요하면 자동재생 켜기 (5초마다)
+      // setInterval(function(){
+      //   goTo((current+1)%total);
+      // }, 5000);
+
+      goTo(0);
     })();
   </script>
 
