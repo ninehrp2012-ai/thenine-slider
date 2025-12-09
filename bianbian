@@ -1,1 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>THE NINE Slider</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      margin:0;
+      background:#000;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      min-height:100vh;
+    }
+
+    .slider-wrap{
+      width:95vw;
+      max-width:900px;
+      padding:8px 0 20px;
+      position:relative;
+    }
+
+    .slider-track{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      scroll-behavior:smooth;
+      scrollbar-width:none;
+    }
+    .slider-track::-webkit-scrollbar{display:none;}
+
+    .slide{
+      flex:0 0 auto;
+      height:300px;      /* 요청한 높이 */
+      width:auto;
+      border-radius:10px;
+      display:block;
+      object-fit:cover;
+      background:#000;
+    }
+
+    .dots{
+      margin-top:10px;
+      text-align:center;
+    }
+    .dot{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:rgba(255,255,255,.3);
+      margin:0 4px;
+      cursor:pointer;
+    }
+    .dot.active{
+      background:#ffcc33;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider-wrap">
+    <div class="slider-track" id="track">
+      <img class="slide" src="https://imgur.com/xwq3lEM.jpg" alt="img1">
+      <img class="slide" src="https://imgur.com/EXImtDL.jpg" alt="img2">
+      <img class="slide" src="https://imgur.com/ZllJqXZ.jpg" alt="img3">
+    </div>
+
+    <div class="dots" id="dots">
+      <span class="dot active" data-index="0"></span>
+      <span class="dot" data-index="1"></span>
+      <span class="dot" data-index="2"></span>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const track = document.getElementById('track');
+      const imgs  = Array.from(track.querySelectorAll('.slide'));
+      const dots  = Array.from(document.querySelectorAll('#dots .dot'));
+
+      function scrollToImage(index){
+        const img = imgs[index];
+        if(!img) return;
+        const trackRect = track.getBoundingClientRect();
+        const imgRect   = img.getBoundingClientRect();
+        const current   = track.scrollLeft;
+        const target = current + (imgRect.left - trackRect.left)
+                     - (trackRect.width - imgRect.width)/2;
+        track.scrollTo({left:target, behavior:'smooth'});
+      }
+
+      function setActiveDot(index){
+        dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+      }
+
+      dots.forEach((dot,i)=>{
+        dot.addEventListener('click',()=>{
+          scrollToImage(i);
+          setActiveDot(i);
+        });
+      });
+
+      // 스크롤 시 가장 중앙 이미지 찾기 → dot 활성화
+      let ticking = false;
+      track.addEventListener('scroll',()=>{
+        if(ticking) return;
+        ticking = true;
+        requestAnimationFrame(()=>{
+          const center = track.scrollLeft + track.clientWidth/2;
+          let closest = 0;
+          let minDiff = Infinity;
+          imgs.forEach((img,i)=>{
+            const mid = img.offsetLeft + img.offsetWidth/2;
+            const diff = Math.abs(center - mid);
+            if(diff < minDiff){
+              minDiff = diff;
+              closest = i;
+            }
+          });
+          setActiveDot(closest);
+          ticking = false;
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>
