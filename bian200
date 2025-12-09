@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>THE NINE Slider</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      margin:0;
+      background:#000; /* 필요하면 다른 색으로 변경 */
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      height:100vh;
+    }
+
+    /* 슬라이더 전체 박스 */
+    .slider{
+      position:relative;
+      width:95vw;          /* 화면 가로 95% */
+      max-width:900px;     /* 너무 넓어지는 것 방지용 */
+      height:200px;        /* 요청한 높이 */
+      overflow:hidden;
+      border-radius:6px;
+    }
+
+    .slides{
+      display:flex;
+      width:500%;          /* 5장 = 100% x 5 */
+      height:100%;
+      transition:transform .4s ease;
+    }
+
+    .slide{
+      flex:0 0 100%;       /* 한 번에 한 장씩 보이도록 */
+      height:100%;
+    }
+
+    .slide img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      display:block;
+    }
+
+    /* 아래 점 네비게이션 */
+    .dots{
+      position:absolute;
+      bottom:8px;
+      left:50%;
+      transform:translateX(-50%);
+      display:flex;
+      gap:8px;
+      z-index:10;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:rgba(255,255,255,.35);
+      cursor:pointer;
+    }
+
+    .dot.active{
+      background:#ffcc33;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="slider" id="slider">
+    <div class="slides" id="slides">
+      <!-- ↓↓↓ 여기 5개 이미지 주소만 바꿔서 쓰면 됨 ↓↓↓ -->
+      <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg" alt="slide1"></div>
+      <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg" alt="slide2"></div>
+      <div class="slide"><img src="https://imgur.com/27x6go7.jpg" alt="slide3"></div>
+    </div>
+
+    <div class="dots" id="dots">
+      <div class="dot active" data-index="0"></div>
+      <div class="dot" data-index="1"></div>
+      <div class="dot" data-index="2"></div>
+      <div class="dot" data-index="3"></div>
+      <div class="dot" data-index="4"></div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const slides = document.getElementById('slides');
+      const dots   = document.querySelectorAll('#dots .dot');
+      let current = 0;
+      const total = dots.length;
+
+      function goTo(index){
+        current = index;
+        slides.style.transform = 'translateX(' + (-100 * index) + '%)';
+        dots.forEach((d,i)=>d.classList.toggle('active', i===index));
+      }
+
+      dots.forEach(dot=>{
+        dot.addEventListener('click', function(){
+          const i = Number(this.getAttribute('data-index'));
+          goTo(i);
+        });
+      });
+
+      // 필요하면 자동재생 켜기 (5초마다)
+      // setInterval(function(){
+      //   goTo((current+1)%total);
+      // }, 5000);
+
+      goTo(0);
+    })();
+  </script>
+
+</body>
+</html>
