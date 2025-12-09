@@ -28,12 +28,12 @@
       overflow:hidden;
     }
 
-    /* 각 사연 한 묶음 */
+    /* 각 사연 */
     .case-item + .case-item{
       border-top:1px solid #444;
     }
 
-    /* 상단 한 줄 (닉네임/요약/금액/+열기/닫기) */
+    /* 상단 박스 */
     .case-head{
       width:100%;
       background:#000;
@@ -45,85 +45,89 @@
       align-items:center;
       gap:8px;
     }
-    .case-head:hover{
-      background:#111;
-    }
-    .case-head .nick{
-      color:#ffcc33;
-      font-weight:bold;
-      white-space:nowrap;
-    }
+    .case-head:hover{ background:#111; }
+    .case-head .nick{ color:#ffcc33; font-weight:bold; white-space:nowrap; }
     .case-head .summary{
-      flex:1 1 auto;
-      min-width:0;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      flex:1 1 auto; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
     }
-    .case-head .amount{
-      white-space:nowrap;
-      font-weight:500;
-      margin-left:6px;
-    }
-    .case-head .toggle{
-      margin-left:10px;
-      white-space:nowrap;
-      color:#ffcc33;
-      font-size:13px;
-    }
+    .case-head .amount{ white-space:nowrap; font-weight:500; margin-left:6px; }
+    .case-head .toggle{ margin-left:10px; white-space:nowrap; color:#ffcc33; font-size:13px; }
 
-    /* 열렸을 때 */
-    .case-item.open .case-head{
-      background:#111;
-    }
-    .case-item.open .toggle::before{
-      content:"- ";
-    }
-    .case-item:not(.open) .toggle::before{
-      content:"+ ";
-    }
+    .case-item.open .case-head{ background:#111; }
+    .case-item.open .toggle::before{ content:"- "; }
+    .case-item:not(.open) .toggle::before{ content:"+ "; }
 
-    /* 안쪽 내용 박스 */
+    /* 내용 영역 */
     .case-body{
       display:none;
       background:#050505;
       border-top:1px solid #333;
       padding:10px 12px 12px;
     }
-    .case-item.open .case-body{
-      display:block;
-    }
+    .case-item.open .case-body{ display:block; }
 
-    /* 내부 표 느낌 레이아웃 */
-    .case-row{
-      display:flex;
-      gap:10px;
-      padding:6px 0;
-    }
-    .case-row + .case-row{
-      border-top:1px dashed #333;
-    }
+    /* 내부 표 느낌 */
+    .case-row{ display:flex; gap:10px; padding:6px 0; }
+    .case-row + .case-row{ border-top:1px dashed #333; }
+
     .case-row-title{
       flex:0 0 80px;
       color:#ffcc33;
       font-weight:600;
       white-space:nowrap;
     }
+
     .case-row-content{
       flex:1 1 auto;
       line-height:1.5;
       word-break:keep-all;
     }
 
-    /* 모바일에서 상단 줄 줄바꿈 */
+    /* 슬라이더 스타일 */
+    .slider-wrap{
+      width:100%;
+      margin:12px 0 0;
+    }
+
+    .slider-track{
+      display:flex;
+      gap:10px;
+      overflow-x:auto;
+      scroll-behavior:smooth;
+      scrollbar-width:none;
+    }
+    .slider-track::-webkit-scrollbar{ display:none; }
+
+    .slide{
+      flex:0 0 auto;
+    }
+
+    .slide img{
+      height:200px;
+      width:auto;
+      object-fit:contain;
+      display:block;
+      border-radius:10px;
+    }
+
+    .dots{
+      margin-top:8px;
+      text-align:center;
+    }
+    .dot{
+      display:inline-block;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:rgba(255,255,255,.35);
+      margin:0 4px;
+      cursor:pointer;
+    }
+    .dot.active{ background:#ffcc33; }
+
     @media (max-width:600px){
-      .case-head{
-        flex-wrap:wrap;
-      }
-      .case-head .summary{
-        flex-basis:100%;
-        margin-top:3px;
-      }
+      .case-head{ flex-wrap:wrap; }
+      .case-head .summary{ flex-basis:100%; margin-top:3px; }
     }
   </style>
 </head>
@@ -132,7 +136,7 @@
 <div class="hope-wrap">
   <div class="case-list">
 
-    <!-- 비엔비엔 -->
+    <!-- ■■■ 비엔비엔 ■■■ -->
     <div class="case-item open">
       <button type="button" class="case-head">
         <span class="nick">• 비엔비엔</span>
@@ -140,46 +144,50 @@
         <span class="amount">500만원</span>
         <span class="toggle">열기/닫기</span>
       </button>
+
       <div class="case-body">
+
         <div class="case-row">
           <div class="case-row-title">사연 요약</div>
           <div class="case-row-content">
-            여기 비엔비엔님의 사연 요약이 들어갑니다. (예: 장기간 치료로 인해
-            경제적 부담이 커져 의료비 지원이 절실한 상황 등)
+            여기 비엔비엔님의 사연 요약이 들어갑니다. (예: 장기간 치료로 인해 경제적 부담이 커져 의료비 지원이 절실한 상황 등)
           </div>
         </div>
+
         <div class="case-row">
           <div class="case-row-title">지원 금액</div>
           <div class="case-row-content">
             총 500만원 의료비 지원
           </div>
         </div>
+
         <div class="case-row">
           <div class="case-row-title">운영진 코멘트</div>
           <div class="case-row-content">
-            작은 도움이지만 치료와 회복에 보탬이 되기를 진심으로 바라며,
-            빠른 쾌유를 응원합니다.
-            
-             <div class="slider-wrap">
-    <div class="slider-track" id="track-bienbien">
-      <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg"></div>
-      <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg"></div>
-      <div class="slide"><img src="https://imgur.com/27x6go7.jpg"></div>
-    </div>
-
-    <div class="dots" id="dots-bienbien">
-      <span class="dot active" data-index="0"></span>
-      <span class="dot" data-index="1"></span>
-      <span class="dot" data-index="2"></span>
-    </div>
-  </div>
-            
+            작은 도움이지만 치료와 회복에 보탬이 되기를 진심으로 바라며, 빠른 쾌유를 응원합니다.
           </div>
         </div>
+
+        <!-- ★★★ 슬라이더 삽입 구역 ★★★ -->
+        <div class="slider-wrap">
+          <div class="slider-track" id="track-bienbien">
+            <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg"></div>
+            <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg"></div>
+            <div class="slide"><img src="https://imgur.com/27x6go7.jpg"></div>
+          </div>
+
+          <div class="dots" id="dots-bienbien">
+            <span class="dot active" data-index="0"></span>
+            <span class="dot" data-index="1"></span>
+            <span class="dot" data-index="2"></span>
+          </div>
+        </div>
+        <!-- ★★★ 슬라이더 끝 ★★★ -->
+
       </div>
     </div>
 
-    <!-- 예시 2 -->
+    <!-- ■■■ 사례 2 ■■■ -->
     <div class="case-item">
       <button type="button" class="case-head">
         <span class="nick">• 닉네임A</span>
@@ -187,29 +195,28 @@
         <span class="amount">300만원</span>
         <span class="toggle">열기/닫기</span>
       </button>
+
       <div class="case-body">
+
         <div class="case-row">
           <div class="case-row-title">사연 요약</div>
-          <div class="case-row-content">
-            예시 사연 요약입니다. 실제 게시 시 회원님의 사연으로 교체해주세요.
-          </div>
+          <div class="case-row-content">예시 사연 요약입니다.</div>
         </div>
+
         <div class="case-row">
           <div class="case-row-title">지원 금액</div>
-          <div class="case-row-content">
-            총 300만원 채무·생활비 지원
-          </div>
+          <div class="case-row-content">총 300만원 채무·생활비 지원</div>
         </div>
+
         <div class="case-row">
           <div class="case-row-title">운영진 코멘트</div>
-          <div class="case-row-content">
-            다시 일어설 수 있는 시간을 함께 만들고자 이번 지원을 진행했습니다.
-          </div>
+          <div class="case-row-content">다시 일어설 수 있는 시간을 함께 만들고자 지원했습니다.</div>
         </div>
+
       </div>
     </div>
 
-    <!-- 예시 3 -->
+    <!-- ■■■ 사례 3 ■■■ -->
     <div class="case-item">
       <button type="button" class="case-head">
         <span class="nick">• 닉네임B</span>
@@ -217,50 +224,86 @@
         <span class="amount">200만원</span>
         <span class="toggle">열기/닫기</span>
       </button>
+
       <div class="case-body">
+
         <div class="case-row">
           <div class="case-row-title">사연 요약</div>
-          <div class="case-row-content">
-            예시 사연 요약입니다. 실제 사연에 맞게 수정해 주세요.
-          </div>
+          <div class="case-row-content">예시 사연 요약입니다.</div>
         </div>
+
         <div class="case-row">
           <div class="case-row-title">지원 금액</div>
-          <div class="case-row-content">
-            총 200만원 생계 지원
-          </div>
+          <div class="case-row-content">총 200만원 생계 지원</div>
         </div>
+
         <div class="case-row">
           <div class="case-row-title">운영진 코멘트</div>
-          <div class="case-row-content">
-            일상으로의 회복을 함께 응원하며 작은 힘을 보탭니다.
-          </div>
+          <div class="case-row-content">일상으로의 회복을 함께 응원합니다.</div>
         </div>
+
       </div>
     </div>
 
   </div>
 </div>
 
+<!-- ▼ 열기/닫기 기능 -->
 <script>
-  // 열기/닫기 토글
-  document.addEventListener('click', function(e){
-    const head = e.target.closest('.case-head');
-    if(!head) return;
+document.addEventListener('click', function(e){
+  const head = e.target.closest('.case-head');
+  if(!head) return;
 
-    const item = head.parentElement;
-    const isOpen = item.classList.contains('open');
+  const item = head.parentElement;
+  const open = item.classList.contains('open');
 
-    // 하나만 열리게 하려면 아래 주석 해제
-    // document.querySelectorAll('.case-item.open')
-    //   .forEach(el => el.classList.remove('open'));
+  if(open){
+    item.classList.remove('open');
+  } else {
+    item.classList.add('open');
+  }
+});
+</script>
 
-    if(isOpen){
-      item.classList.remove('open');
-    }else{
-      item.classList.add('open');
-    }
+<!-- ▼ 슬라이더 기능 -->
+<script>
+function initSlider(trackId, dotsId){
+  const track = document.getElementById(trackId);
+  const slides = Array.from(track.querySelectorAll('.slide'));
+  const dots = Array.from(document.querySelectorAll(`#${dotsId} .dot`));
+
+  function scrollToSlide(i){
+    track.scrollTo({ left: slides[i].offsetLeft, behavior:'smooth' });
+  }
+
+  function setDot(i){
+    dots.forEach((d,idx)=> d.classList.toggle('active', idx===i));
+  }
+
+  dots.forEach((dot,i)=>{
+    dot.addEventListener('click', ()=>{
+      scrollToSlide(i);
+      setDot(i);
+    });
   });
+
+  track.addEventListener('scroll', ()=>{
+    const center = track.scrollLeft + track.clientWidth/2;
+    let closest = 0;
+    let min = Infinity;
+
+    slides.forEach((sl,i)=>{
+      const mid = sl.offsetLeft + sl.offsetWidth/2;
+      const diff = Math.abs(center - mid);
+      if(diff < min){ min = diff; closest=i; }
+    });
+
+    setDot(closest);
+  });
+}
+
+// 슬라이더 초기화
+initSlider("track-bienbien","dots-bienbien");
 </script>
 
 </body>
