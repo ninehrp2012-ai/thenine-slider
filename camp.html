@@ -46,12 +46,28 @@
       gap:8px;
     }
     .case-head:hover{ background:#111; }
-    .case-head .nick{ color:#ffcc33; font-weight:bold; white-space:nowrap; }
-    .case-head .summary{
-      flex:1 1 auto; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+    .case-head .nick{
+      color:#ffcc33;
+      font-weight:bold;
+      white-space:nowrap;
     }
-    .case-head .amount{ white-space:nowrap; font-weight:500; margin-left:6px; }
-    .case-head .toggle{ margin-left:10px; white-space:nowrap; color:#ffcc33; font-size:13px; }
+    .case-head .summary{
+      flex:1 1 auto;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .case-head .amount{
+      white-space:nowrap;
+      font-weight:500;
+      margin-left:6px;
+    }
+    .case-head .toggle{
+      margin-left:10px;
+      white-space:nowrap;
+      color:#ffcc33;
+      font-size:13px;
+    }
 
     .case-item.open .case-head{ background:#111; }
     .case-item.open .toggle::before{ content:"- "; }
@@ -67,8 +83,14 @@
     .case-item.open .case-body{ display:block; }
 
     /* 내부 표 느낌 */
-    .case-row{ display:flex; gap:10px; padding:6px 0; }
-    .case-row + .case-row{ border-top:1px dashed #333; }
+    .case-row{
+      display:flex;
+      gap:10px;
+      padding:6px 0;
+    }
+    .case-row + .case-row{
+      border-top:1px dashed #333;
+    }
 
     .case-row-title{
       flex:0 0 80px;
@@ -103,7 +125,7 @@
     }
 
     .slide img{
-      height:200px;
+      height:200px;      /* 기본 PC 높이 */
       width:auto;
       object-fit:contain;
       display:block;
@@ -125,9 +147,43 @@
     }
     .dot.active{ background:#ffcc33; }
 
-    @media (max-width:600px){
-      .case-head{ flex-wrap:wrap; }
-      .case-head .summary{ flex-basis:100%; margin-top:3px; }
+    /* 모바일 대응 */
+    @media (max-width:768px){
+      .hope-wrap{
+        width:100%;
+        margin:10px 0 0;
+      }
+      .slide img{
+        height:180px;
+      }
+
+      .case-head{
+        flex-wrap:wrap;
+      }
+
+      /* 닉네임/요약을 위쪽에서 전체 폭 사용 */
+      .case-head .nick{
+        flex:1 1 100%;
+        white-space:normal;
+      }
+      .case-head .summary{
+        flex:1 1 100%;
+        margin-top:2px;
+      }
+
+      /* 금액/열기닫기는 그 아래 줄 */
+      .case-head .amount,
+      .case-head .toggle{
+        white-space:normal;
+        margin-top:4px;
+        font-size:13px;
+      }
+    }
+
+    @media (max-width:480px){
+      .slide img{
+        height:160px;
+      }
     }
   </style>
 </head>
@@ -171,9 +227,9 @@
         <!-- ★★★ 슬라이더 삽입 구역 ★★★ -->
         <div class="slider-wrap">
           <div class="slider-track" id="track-bienbien">
-            <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg"></div>
-            <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg"></div>
-            <div class="slide"><img src="https://imgur.com/27x6go7.jpg"></div>
+            <div class="slide"><img src="https://imgur.com/B0qJD4s.jpg" alt=""></div>
+            <div class="slide"><img src="https://imgur.com/GO4vbwR.jpg" alt=""></div>
+            <div class="slide"><img src="https://imgur.com/27x6go7.jpg" alt=""></div>
           </div>
 
           <div class="dots" id="dots-bienbien">
